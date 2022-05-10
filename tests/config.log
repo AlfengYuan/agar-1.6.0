@@ -1,0 +1,218 @@
+# BSDBuild 3.2 <https://bsdbuild.hypertriton.com/>
+# ex:syn=sh
+env ./configure
+# checking for a C compiler...yes, /usr/bin/clang
+# checking whether the C compiler works...yes
+# cc: checking whether compiler is Clang...
+# C: HAVE_CC_CLANG
+cat << EOT >conftest65780.c
+#if !defined(__clang__)
+# error "is not clang"
+#endif
+int main(int argc, char *argv[]) { return (0); }
+EOT
+/usr/bin/clang    -o ./conftest65780 conftest65780.c  2>>config.log
+# yes
+# cc: checking whether compiler is GCC...
+# C: HAVE_CC_GCC
+cat << EOT >conftest65780.c
+#if !defined(__GNUC__) || defined(__clang__)
+# error "is not gcc"
+#endif
+int main(int argc, char *argv[]) { return (0); }
+EOT
+/usr/bin/clang    -o ./conftest65780 conftest65780.c  2>>config.log
+conftest65780.c:2:3: error: "is not gcc"
+# error "is not gcc"
+  ^
+1 error generated.
+# failed 0
+# no
+# cc: checking for compiler warning options...
+# C: HAVE_CC_WARNINGS
+cat << EOT >conftest65780.c
+int main(int argc, char *argv[]) { return (0); }
+EOT
+/usr/bin/clang   -Wall -o ./conftest65780 conftest65780.c  2>>config.log
+# yes
+# cc: checking for float and double...
+# C: HAVE_FLOAT
+cat << EOT >conftest65780.c
+#include <stdio.h>
+int
+main(int argc, char *argv[])
+{
+	float f = 0.1f;
+	double d = 0.2;
+
+	printf("%f", f);
+	return ((double)f + d) > 0.2 ? 1 : 0;
+}
+EOT
+/usr/bin/clang  -Wall -o ./conftest65780 conftest65780.c 2>>config.log
+# yes
+# cc: checking for long double...
+# C: HAVE_LONG_DOUBLE
+cat << EOT >conftest65780.c
+#include <stdio.h>
+int
+main(int argc, char *argv[])
+{
+	long double ld = 0.1;
+
+	printf("%Lf", ld);
+	return (ld + 0.1) > 0.2 ? 1 : 0;
+}
+EOT
+/usr/bin/clang  -Wall -o ./conftest65780 conftest65780.c 2>>config.log
+# yes
+# cc: checking for long long...
+# C: HAVE_LONG_LONG
+cat << EOT >conftest65780.c
+int
+main(int argc, char *argv[])
+{
+	long long ll = -1;
+	unsigned long long ull = 1;
+
+	return (ll != -1 || ull != 1);
+}
+EOT
+/usr/bin/clang  -Wall -o ./conftest65780 conftest65780.c 2>>config.log
+# yes
+# cc: checking for cygwin environment...
+# C: HAVE_CYGWIN
+cat << EOT >conftest65780.c
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <windows.h>
+
+int
+main(int argc, char *argv[]) {
+	struct stat sb;
+	DWORD rv;
+	rv = GetFileAttributes("foo");
+	stat("foo", &sb);
+	return (0);
+}
+EOT
+/usr/bin/clang  -Wall -mcygwin -o ./conftest65780 conftest65780.c 2>>config.log
+clang: error: unknown argument: '-mcygwin'
+# failed 0
+# no
+# cc: checking for -mwindows option...
+# C: HAVE_CC_MWINDOWS
+cat << EOT >conftest65780.c
+#include <windows.h>
+int
+main(int argc, char *argv[]) {
+	return GetFileAttributes("foo") ? 0 : 1;
+}
+EOT
+/usr/bin/clang  -Wall -mwindows -o ./conftest65780 conftest65780.c 2>>config.log
+clang: warning: argument unused during compilation: '-mwindows' [-Wunused-command-line-argument]
+conftest65780.c:1:10: fatal error: 'windows.h' file not found
+#include <windows.h>
+         ^~~~~~~~~~~
+1 error generated.
+# failed 0
+# no
+# cc: checking for -mconsole option...
+# C: HAVE_CC_MCONSOLE
+cat << EOT >conftest65780.c
+#include <windows.h>
+int
+main(int argc, char *argv[]) {
+	return GetFileAttributes("foo") ? 0 : 1;
+}
+EOT
+/usr/bin/clang  -Wall -mconsole -o ./conftest65780 conftest65780.c 2>>config.log
+clang: warning: argument unused during compilation: '-mconsole' [-Wunused-command-line-argument]
+conftest65780.c:1:10: fatal error: 'windows.h' file not found
+#include <windows.h>
+         ^~~~~~~~~~~
+1 error generated.
+# failed 0
+# no
+# checking for Agar...# yes (1.6.0)
+# checking whether Agar works...
+# C: HAVE_AGAR
+cat << EOT >conftest65780.c
+#include <agar/core.h>
+#include <agar/gui.h>
+
+int
+main(int argc, char *argv[])
+{
+	AG_InitCore("conf-test", 0);
+	AG_InitGraphics(AG_NULL);
+#ifdef AG_EVENT_LOOP
+	AG_EventLoop();
+#endif
+	AG_Quit();
+	return (0);
+}
+EOT
+/usr/bin/clang  -Wall -I/usr/local/include/agar -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT  -I/usr/include -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16        -I/home/yyf/anaconda3/include/libpng16          -o ./conftest65780 conftest65780.c -L/usr/local/lib -lag_gui -lag_core  -L/usr/lib/x86_64-linux-gnu -lSDL -lfreetype -lfontconfig -lfreetype  -L/usr/local/lib -lGL -lX11 -lXinerama  -lm -L/usr/lib -ljpeg -L/home/yyf/anaconda3/lib -lpng16 -lpthread     -ldl    2>>config.log
+# yes
+# checking for Agar-Math...# yes (1.6.0)
+# checking whether Agar-Math works...
+# C: HAVE_AGAR_MATH
+cat << EOT >conftest65780.c
+#include <agar/core.h>
+#include <agar/gui.h>
+#include <agar/math/m.h>
+
+int main(int argc, char *argv[]) {
+	M_Matrix *A = M_New(2,2);
+	AG_InitCore("test", 0);
+	M_InitSubsystem();
+	M_SetIdentity(A);
+	AG_Destroy();
+	return (0);
+}
+EOT
+/usr/bin/clang  -Wall -I/usr/local/include/agar   -msse -msse2 -msse3  -I/usr/local/include/agar -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT  -I/usr/include -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16        -I/home/yyf/anaconda3/include/libpng16          -o ./conftest65780 conftest65780.c -L/usr/local/lib -lag_math -lm -L/usr/local/lib -lag_gui -lag_core  -L/usr/lib/x86_64-linux-gnu -lSDL -lfreetype -lfontconfig -lfreetype  -L/usr/local/lib -lGL -lX11 -lXinerama  -lm -L/usr/lib -ljpeg -L/home/yyf/anaconda3/lib -lpng16 -lpthread     -ldl    2>>config.log
+# yes
+# checking for Agar-VG...# yes (1.6.0)
+# checking whether agar-vg works...
+# C: HAVE_AGAR_VG
+cat << EOT >conftest65780.c
+#include <agar/core.h>
+#include <agar/vg.h>
+
+int main(int argc, char *argv[]) {
+	VG *vg;
+	AG_InitCore(NULL, 0);
+	VG_InitSubsystem();
+	if ((vg = VG_New(0)) != NULL) {
+		AG_ObjectDestroy(vg);
+	}
+	VG_DestroySubsystem();
+	AG_Quit();
+	return (0);
+}
+EOT
+/usr/bin/clang  -Wall -I/usr/local/include/agar -I/usr/local/include/agar -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT  -I/usr/include -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16        -I/home/yyf/anaconda3/include/libpng16          -o ./conftest65780 conftest65780.c -L/usr/local/lib -lag_vg -L/usr/local/lib -lag_gui -lag_core  -L/usr/lib/x86_64-linux-gnu -lSDL -lfreetype -lfontconfig -lfreetype  -L/usr/local/lib -lGL -lX11 -lXinerama  -lm -L/usr/lib -ljpeg -L/home/yyf/anaconda3/lib -lpng16 -lpthread     -ldl    2>>config.log
+# yes
+# checking for Agar-AU...# no
+# checking for the rand48(3) family of functions...
+# C: HAVE_RAND48
+cat << EOT >conftest65780.c
+#include <stdlib.h>
+int
+main(int argc, char *argv[])
+{
+	double d1, d2;
+	unsigned short xbuf[3] = { 1,2,3 };
+	unsigned short p[7];
+	long l1, l2;
+	d1 = drand48(); d2 = erand48(xbuf);
+	l1 = lrand48(); l2 = nrand48(xbuf);
+	srand48(l1);
+	lcong48(p);
+	return (0);
+}
+EOT
+/usr/bin/clang  -Wall -o ./conftest65780 conftest65780.c 2>>config.log
+# yes
